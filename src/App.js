@@ -2,34 +2,53 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Button from './components/Button';
 
+const initArr = [],
+  initDisplay = 0,
+  initInput = undefined;
+
 function App() {
-  const initialArr = [],
-    initialDisplay = '0';
-  const [arr, setArr] = useState(initialArr);
-  const [display, setDisplay] = useState(initialDisplay);
+  const [arr, setArr] = useState(initArr);
+  const [display, setDisplay] = useState(initDisplay);
+  const [currentInput, setCurrentInput] = useState(initInput);
+  const [currentOperator, setCurrentOperator] = useState(initInput);
   const clearState = () => {
-    setDisplay(initialDisplay);
-    setArr(initialArr);
+    setDisplay(initDisplay);
+    setCurrentOperator(initInput);
+    setArr(initArr);
+    console.clear();
   };
   const handleNum = (num) => {
     setDisplay((prevState) => {
-      if (prevState !== initialDisplay) {
+      if (prevState !== 0 && currentInput === initInput) {
         const numbers = prevState + String(num);
-        return numbers;
+        return Number(numbers);
       }
-      return String(num);
+      return num;
     });
+    // reset current input & operator state
+    setCurrentInput(initInput);
+    setCurrentOperator(initInput);
   };
-  const handleOperator = (operator) => {
+  const handleOperator = (op) => {
+    setCurrentInput(display);
+    setCurrentOperator(op);
     setArr((prevState) => {
-      return prevState.concat(display).concat(operator);
+      const lastIndex = prevState.length - 1;
+      // if currentOperator present, replace it
+      if (currentOperator && isNaN(prevState[lastIndex])) {
+        const rmOperator = prevState.slice(0, lastIndex);
+        return rmOperator.concat(op);
+      }
+      const newArr = prevState.concat(display).concat(op);
+      return newArr;
     });
-    setDisplay(initialDisplay);
   };
 
   useEffect(() => {
     console.log('arr', arr);
     console.log('display', display);
+    console.log('input', currentInput);
+    console.log('operator', currentOperator);
   });
 
   return (
