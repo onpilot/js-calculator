@@ -6,15 +6,23 @@ const initArr = [],
   initDisplay = 0,
   initInput = undefined;
 
+const doMath = (arr) => {
+  // @NOTE: need to refactor eval()
+  const MATH_OPERATION = eval(arr.join(''));
+  console.log('MATH:', MATH_OPERATION);
+  return MATH_OPERATION;
+};
+
 function App() {
   const [arr, setArr] = useState(initArr);
   const [display, setDisplay] = useState(initDisplay);
   const [currentInput, setCurrentInput] = useState(initInput);
   const [currentOperator, setCurrentOperator] = useState(initInput);
   const clearState = () => {
-    setDisplay(initDisplay);
-    setCurrentOperator(initInput);
     setArr(initArr);
+    setDisplay(initDisplay);
+    setCurrentInput(initInput);
+    setCurrentOperator(initInput);
     console.clear();
   };
   const handleNum = (num) => {
@@ -33,15 +41,24 @@ function App() {
     setCurrentInput(display);
     setCurrentOperator(op);
     setArr((prevState) => {
-      const lastIndex = prevState.length - 1;
       // if currentOperator present, replace it
-      if (currentOperator && isNaN(prevState[lastIndex])) {
-        const rmOperator = prevState.slice(0, lastIndex);
+      if (currentOperator) {
+        const rmOperator = prevState.slice(0, -1);
         return rmOperator.concat(op);
       }
       const newArr = prevState.concat(display).concat(op);
+
+      // @NOTE: need to refactor ?
+      const currentResult = doMath(newArr.slice(0, -1));
+      setDisplay(currentResult);
+
       return newArr;
     });
+  };
+  const getResult = () => {
+    const newArr = arr.concat(display);
+    clearState();
+    setDisplay(doMath(newArr));
   };
 
   useEffect(() => {
@@ -95,7 +112,7 @@ function App() {
         <Button value="&#9003;"></Button>
         <Button id="zero" value="0" onClick={() => handleNum(0)}></Button>
         <Button id="decimal" value="."></Button>
-        <Button id="equals" value="&#61;"></Button>
+        <Button id="equals" value="&#61;" onClick={() => getResult()}></Button>
       </div>
     </div>
   );
