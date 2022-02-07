@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Button from './components/Button';
 
+const operators = ['*', '/', '+', '-'];
+const symbols = ['C', '%', '.', 'plusmin'];
+const reservedOps = operators.concat(symbols);
 const initArr = [],
-  initDisplay = 0,
-  initInput = undefined;
+  initDisplay = 0;
 
 const doMath = (arr) => {
   // @NOTE: need to refactor eval()
@@ -16,26 +18,42 @@ const doMath = (arr) => {
 function App() {
   const [arr, setArr] = useState(initArr);
   const [display, setDisplay] = useState(initDisplay);
-  const [currentInput, setCurrentInput] = useState(initInput);
-  const [currentOperator, setCurrentOperator] = useState(initInput);
+  const [currentInput, setCurrentInput] = useState(null);
+  const [currentOperator, setCurrentOperator] = useState(null);
   const clearState = () => {
     setArr(initArr);
     setDisplay(initDisplay);
-    setCurrentInput(initInput);
-    setCurrentOperator(initInput);
+    setCurrentInput(null);
+    setCurrentOperator(null);
     console.clear();
   };
-  const handleNum = (num) => {
+  const handleNum = (value) => {
+    let num = null,
+      symbol = null;
+    Number.isInteger(value) ? (num = value) : (symbol = value);
+
     setDisplay((prevState) => {
-      if (prevState !== 0 && currentInput === initInput) {
+      // handling decimal separator
+      if (symbol === '.') {
+        if (Number.isInteger(prevState)) {
+          return prevState + symbol;
+        }
+        return prevState;
+      }
+      // override zero number handling for decimal
+      if (num === 0 && !Number.isInteger(prevState)) {
+        return prevState + String(num);
+      }
+      // handling zero and non-zero number
+      if (prevState !== 0 && currentInput === null) {
         const numbers = prevState + String(num);
         return Number(numbers);
       }
       return num;
     });
     // reset current input & operator state
-    setCurrentInput(initInput);
-    setCurrentOperator(initInput);
+    setCurrentInput(null);
+    setCurrentOperator(null);
   };
   const handleOperator = (op) => {
     setCurrentInput(display);
@@ -111,7 +129,7 @@ function App() {
         ></Button>
         <Button value="&#9003;"></Button>
         <Button id="zero" value="0" onClick={() => handleNum(0)}></Button>
-        <Button id="decimal" value="."></Button>
+        <Button id="decimal" value="." onClick={() => handleNum('.')}></Button>
         <Button id="equals" value="&#61;" onClick={() => getResult()}></Button>
       </div>
     </div>
