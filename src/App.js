@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import Button from './components/Button';
 
-const operators = ['*', '/', '+', '-'];
-const symbols = ['C', '%', '.', 'plusmin'];
-const reservedOps = operators.concat(symbols);
 const initArr = [],
   initDisplay = 0;
 
@@ -33,6 +30,13 @@ function App() {
     Number.isInteger(value) ? (num = value) : (symbol = value);
 
     setDisplay((prevState) => {
+      // handling positive/negative number
+      if (symbol === '+-') {
+        if (prevState > 0) {
+          return prevState * -1;
+        }
+        return Math.abs(prevState);
+      }
       // handling decimal separator
       if (symbol === '.') {
         if (Number.isInteger(prevState)) {
@@ -97,7 +101,7 @@ function App() {
       <div className="buttons-wrapper">
         <Button id="clear" value="C" onClick={() => clearState()}></Button>
         <Button value="&#37;"></Button>
-        <Button value="&#177;"></Button>
+        <Button value="&#177;" onClick={() => handleNum('+-')}></Button>
         <Button
           id="divide"
           value="&#247;"
