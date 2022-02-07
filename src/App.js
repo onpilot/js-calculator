@@ -1,4 +1,3 @@
-import { clear } from '@testing-library/user-event/dist/clear';
 import { useEffect, useState } from 'react';
 import './App.css';
 import Button from './components/Button';
