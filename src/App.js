@@ -1,3 +1,4 @@
+import { clear } from '@testing-library/user-event/dist/clear';
 import { useEffect, useState } from 'react';
 import './App.css';
 import Button from './components/Button';
@@ -8,7 +9,7 @@ const initArr = [],
 const doMath = (arr) => {
   // @NOTE: need to refactor eval()
   const MATH_OPERATION = eval(arr.join(''));
-  console.log('MATH:', MATH_OPERATION);
+  // console.log('MATH:', MATH_OPERATION);
   return MATH_OPERATION;
 };
 
@@ -22,7 +23,18 @@ function App() {
     setDisplay(initDisplay);
     setCurrentInput(null);
     setCurrentOperator(null);
-    console.clear();
+    // console.clear();
+  };
+  const eraseToLeft = () => {
+    setDisplay((prevState) => {
+      if (prevState !== 0) {
+        if (prevState[prevState.length - 1] !== '.') {
+          return String(prevState).slice(0, -1);
+        }
+        return Number(prevState);
+      }
+      return Number(prevState);
+    });
   };
   const handleNum = (value) => {
     let num = null,
@@ -83,12 +95,12 @@ function App() {
     setDisplay(doMath(newArr));
   };
 
-  useEffect(() => {
-    console.log('arr', arr);
-    console.log('display', display);
-    console.log('input', currentInput);
-    console.log('operator', currentOperator);
-  });
+  // useEffect(() => {
+  //   console.log('arr', arr);
+  //   console.log('display', display);
+  //   console.log('input', currentInput);
+  //   console.log('operator', currentOperator);
+  // });
 
   return (
     <div className="calculator-wrapper">
@@ -131,7 +143,7 @@ function App() {
           value="&#43;"
           onClick={() => handleOperator('+')}
         ></Button>
-        <Button value="&#9003;"></Button>
+        <Button value="&#8592;" onClick={() => eraseToLeft()}></Button>
         <Button id="zero" value="0" onClick={() => handleNum(0)}></Button>
         <Button id="decimal" value="." onClick={() => handleNum('.')}></Button>
         <Button id="equals" value="&#61;" onClick={() => getResult()}></Button>
