@@ -1,5 +1,6 @@
 import useFunctionSets from './functions/useFunctionSets';
 import Button from './components/Button';
+import './root.css';
 import './App.css';
 
 function App() {

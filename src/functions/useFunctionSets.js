@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 const initArr = [],
   initDisplay = 0;
 
+// Business logic
 const doMath = (arr) => {
   // @NOTE: need to refactor eval()
   const MATH_OPERATION = eval(arr.join(''));
@@ -10,6 +11,7 @@ const doMath = (arr) => {
   return MATH_OPERATION;
 };
 
+// Implementation/framework logic
 const useFunctionSets = () => {
   const [arr, setArr] = useState(initArr);
   const [display, setDisplay] = useState(initDisplay);
@@ -89,8 +91,8 @@ const useFunctionSets = () => {
   const getResult = () => {
     const newArr = arr.concat(display);
     clearState();
-    // move to handleOperator ?
-    // implement multiple [=] clicks
+    // @NOTE: move to handleOperator ?
+    // @NOTE: implement multiple [=] clicks
     setDisplay(doMath(newArr));
   };
 
