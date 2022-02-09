@@ -9,6 +9,7 @@ function App() {
     eraseToLeft,
     handleNum,
     handleOperator,
+    getPercentage,
     getResult,
     arr,
     display,
@@ -24,7 +25,7 @@ function App() {
       </div>
       <div className="buttons-wrapper">
         <Button id="clear" value="C" onClick={() => clearAllStates()}></Button>
-        <Button value="&#37;"></Button>
+        <Button value="&#37;" onClick={() => getPercentage()}></Button>
         <Button value="&#177;" onClick={() => handleNum('+-')}></Button>
         <Button
           id="divide"

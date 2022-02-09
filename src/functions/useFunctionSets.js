@@ -57,6 +57,9 @@ const useFunctionSets = () => {
     const newArr = arr.concat(display);
     setDisplay(doMath(newArr));
   };
+  const getPercentage = () => {
+    setDisplay(display / 100);
+  };
   const handleNum = (value) => {
     let num = null,
       symbol = null;
@@ -115,6 +118,7 @@ const useFunctionSets = () => {
     eraseToLeft,
     handleNum,
     handleOperator,
+    getPercentage,
     getResult,
     arr,
     display,
