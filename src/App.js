@@ -1,5 +1,5 @@
 import useFunctionSets from './functions/useFunctionSets';
-import Button from './components/Button';
+import { Button } from './components/Button.styled';
 import './root.css';
 import './App.css';
 
@@ -31,6 +31,7 @@ function App() {
           id="divide"
           value="&#247;"
           onClick={() => handleOperator('/')}
+          primary
         ></Button>
         <Button id="seven" value="7" onClick={() => handleNum(7)}></Button>
         <Button id="eight" value="8" onClick={() => handleNum(8)}></Button>
@@ -39,6 +40,7 @@ function App() {
           id="multiply"
           value="&#215;"
           onClick={() => handleOperator('*')}
+          primary
         ></Button>
         <Button id="four" value="4" onClick={() => handleNum(4)}></Button>
         <Button id="five" value="5" onClick={() => handleNum(5)}></Button>
@@ -47,6 +49,7 @@ function App() {
           id="subtract"
           value="&#8722;"
           onClick={() => handleOperator('-')}
+          primary
         ></Button>
         <Button id="one" value="1" onClick={() => handleNum(1)}></Button>
         <Button id="two" value="2" onClick={() => handleNum(2)}></Button>
@@ -55,11 +58,17 @@ function App() {
           id="add"
           value="&#43;"
           onClick={() => handleOperator('+')}
+          primary
         ></Button>
         <Button value="&#8592;" onClick={() => eraseToLeft()}></Button>
         <Button id="zero" value="0" onClick={() => handleNum(0)}></Button>
         <Button id="decimal" value="." onClick={() => handleNum('.')}></Button>
-        <Button id="equals" value="&#61;" onClick={() => getResult()}></Button>
+        <Button
+          id="equals"
+          value="&#61;"
+          onClick={() => getResult()}
+          secondary
+        ></Button>
       </div>
     </div>
   );
