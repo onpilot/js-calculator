@@ -15,25 +15,47 @@ const doMath = (arr) => {
 const useFunctionSets = () => {
   const [arr, setArr] = useState(initArr);
   const [display, setDisplay] = useState(initDisplay);
-  const [currentInput, setCurrentInput] = useState(null);
+  const [currentNumber, setCurrentNumber] = useState(null);
   const [currentOperator, setCurrentOperator] = useState(null);
-  const clearState = () => {
+  const [lastOperation, setLastOperation] = useState(null);
+  const clearAllStates = () => {
     setArr(initArr);
     setDisplay(initDisplay);
-    setCurrentInput(null);
+    setCurrentNumber(null);
     setCurrentOperator(null);
+    setLastOperation(null);
     // console.clear();
+  };
+  const clearSomeStates = () => {
+    setArr(initArr);
+    setDisplay(initDisplay);
+    setCurrentNumber(null);
+    setCurrentOperator(null);
   };
   const eraseToLeft = () => {
     setDisplay((prevState) => {
       if (prevState !== 0) {
-        if (prevState[prevState.length - 1] !== '.') {
-          return String(prevState).slice(0, -1);
-        }
-        return Number(prevState);
+        return prevState[prevState.length - 1] !== '.'
+          ? String(prevState).slice(0, -1)
+          : Number(prevState);
       }
       return Number(prevState);
     });
+  };
+  const getResult = () => {
+    clearSomeStates();
+    // @NOTE: try to implement multiple [=] clicks
+    // let newArr = [];
+    // if (!lastOperation) {
+    //   newArr = arr.concat(display);
+    //   setLastOperation(newArr.slice(-2));
+    //   // setArr(newArr);
+    // } else {
+    //   newArr = [display].concat(lastOperation);
+    //   // setArr(newArr);
+    // }
+    const newArr = arr.concat(display);
+    setDisplay(doMath(newArr));
   };
   const handleNum = (value) => {
     let num = null,
@@ -43,35 +65,29 @@ const useFunctionSets = () => {
     setDisplay((prevState) => {
       // handling positive/negative number
       if (symbol === '+-') {
-        if (prevState > 0) {
-          return prevState * -1;
-        }
-        return Math.abs(prevState);
+        return prevState > 0 ? prevState * -1 : prevState;
       }
       // handling decimal separator
       if (symbol === '.') {
-        if (Number.isInteger(prevState)) {
-          return prevState + symbol;
-        }
-        return prevState;
+        return Number.isInteger(prevState) ? prevState + symbol : prevState;
       }
       // override zero number handling for decimal
       if (num === 0 && !Number.isInteger(prevState)) {
         return prevState + String(num);
       }
-      // handling zero and non-zero number
-      if (prevState !== 0 && currentInput === null) {
+      // handling non-zeroes and zero number
+      if (prevState !== 0 && currentNumber === null) {
         const numbers = prevState + String(num);
         return Number(numbers);
       }
       return num;
     });
-    // reset current input & operator state
-    setCurrentInput(null);
+    // reset currentNumber & currentOperator state
+    setCurrentNumber(null);
     setCurrentOperator(null);
   };
   const handleOperator = (op) => {
-    setCurrentInput(display);
+    setCurrentNumber(display);
     setCurrentOperator(op);
     setArr((prevState) => {
       // if currentOperator present, replace it
@@ -80,31 +96,22 @@ const useFunctionSets = () => {
         return rmOperator.concat(op);
       }
       const newArr = prevState.concat(display).concat(op);
-
-      // @NOTE: need to refactor ?
+      // @NOTE: need to refactor setState inside setState?
       const currentResult = doMath(newArr.slice(0, -1));
       setDisplay(currentResult);
-
       return newArr;
     });
   };
-  const getResult = () => {
-    const newArr = arr.concat(display);
-    clearState();
-    // @NOTE: move to handleOperator ?
-    // @NOTE: implement multiple [=] clicks
-    setDisplay(doMath(newArr));
-  };
 
-  //   useEffect(() => {
+  // useEffect(() => {
   //     console.log('arr', arr);
   //     console.log('display', display);
-  //     console.log('input', currentInput);
+  //     console.log('input', currentNumber);
   //     console.log('operator', currentOperator);
-  //   });
+  // });
 
   return {
-    clearState,
+    clearAllStates,
     eraseToLeft,
     handleNum,
     handleOperator,
