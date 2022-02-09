@@ -35,9 +35,9 @@ const useFunctionSets = () => {
   const eraseToLeft = () => {
     setDisplay((prevState) => {
       if (prevState !== 0) {
-        return prevState[prevState.length - 1] !== '.'
+        return String(prevState).length > 1
           ? String(prevState).slice(0, -1)
-          : Number(prevState);
+          : 0;
       }
       return Number(prevState);
     });
