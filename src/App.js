@@ -18,6 +18,7 @@ function App() {
   return (
     <div className="calculator-wrapper">
       <div className="display-wrapper">
+        <div className="display-title">Standard</div>
         <div className="display-small">{arr}</div>
         <div id="display" className="display-main">
           {display}
