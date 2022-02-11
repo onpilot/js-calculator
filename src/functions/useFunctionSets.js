@@ -17,13 +17,13 @@ const useFunctionSets = () => {
   const [display, setDisplay] = useState(initDisplay);
   const [currentNumber, setCurrentNumber] = useState(null);
   const [currentOperator, setCurrentOperator] = useState(null);
-  const [lastOperation, setLastOperation] = useState(null);
+  // const [lastOperation, setLastOperation] = useState(null);
   const clearAllStates = () => {
     setArr(initArr);
     setDisplay(initDisplay);
     setCurrentNumber(null);
     setCurrentOperator(null);
-    setLastOperation(null);
+    // setLastOperation(null);
     // console.clear();
   };
   const clearSomeStates = () => {
@@ -54,8 +54,14 @@ const useFunctionSets = () => {
     //   newArr = [display].concat(lastOperation);
     //   // setArr(newArr);
     // }
-    const newArr = arr.concat(display);
-    setDisplay(doMath(newArr));
+    if (!togglePatch) {
+      const newArr = arr.concat(display);
+      setDisplay(doMath(newArr));
+    } else {
+      // @PATCH: FCC test no.13 patch
+      const patchedArr = getPatchedArr(arr.concat(display));
+      setDisplay(doMath(patchedArr));
+    }
   };
   const getPercentage = () => {
     setDisplay(display / 100);
@@ -92,18 +98,52 @@ const useFunctionSets = () => {
   const handleOperator = (op) => {
     setCurrentNumber(display);
     setCurrentOperator(op);
-    setArr((prevState) => {
-      // if currentOperator present, replace it
-      if (currentOperator) {
-        const rmOperator = prevState.slice(0, -1);
-        return rmOperator.concat(op);
+    if (!togglePatch) {
+      setArr((prevState) => {
+        // if currentOperator present, replace it
+        if (currentOperator) {
+          const rmOperator = prevState.slice(0, -1);
+          return rmOperator.concat(op);
+        }
+        const newArr = prevState.concat(display).concat(op);
+        // @NOTE: need to refactor setState inside setState?
+        const currentResult = doMath(newArr.slice(0, -1));
+        setDisplay(currentResult);
+        return newArr;
+      });
+    } else {
+      // @PATCH: FCC test no.13 patch
+      setArr((prevState) => {
+        // if currentOperator present, IGNORE it
+        if (currentOperator) {
+          return prevState.concat(op);
+        }
+        const newArr = prevState.concat(display).concat(op);
+        return newArr;
+      });
+    }
+  };
+  /**
+   * @PATCH: FCC test no.13 patch
+   *  If 2 or more operators are entered consecutively,
+   * the operation performed should be the last operator entered
+   * (excluding the negative (-) sign.
+   */
+  const [togglePatch, setTogglePatch] = useState(false);
+  const getPatchedArr = (arr) => {
+    let patchedArr = [];
+    arr.forEach((e, i) => {
+      if (!isNaN(e)) {
+        patchedArr.push(e);
       }
-      const newArr = prevState.concat(display).concat(op);
-      // @NOTE: need to refactor setState inside setState?
-      const currentResult = doMath(newArr.slice(0, -1));
-      setDisplay(currentResult);
-      return newArr;
+      if (isNaN(e) && arr[i + 1] === '-' && !isNaN(arr[i + 2])) {
+        patchedArr.push(e);
+      }
+      if (isNaN(e) && !isNaN(arr[i + 1])) {
+        patchedArr.push(e);
+      }
     });
+    return patchedArr;
   };
 
   // useEffect(() => {
@@ -122,6 +162,9 @@ const useFunctionSets = () => {
     getResult,
     arr,
     display,
+    // @PATCH: FCC test no.13 patch
+    togglePatch,
+    setTogglePatch,
   };
 };
 
