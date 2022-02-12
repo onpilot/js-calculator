@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import '../root.css';
 
 export const Button = styled.input.attrs((props) => ({
   type: 'button',

@@ -1,5 +1,6 @@
 import useFunctionSets from './functions/useFunctionSets';
 import { Button } from './components/Button.styled';
+import { SocialLinks } from './components/social-links/SocialLinks';
 import './root.css';
 import './App.css';
 
@@ -99,7 +100,11 @@ function App() {
         <p>
           <small>
             The patch was implemented to pass test no. 13 as required by{' '}
-            <a href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator">
+            <a
+              href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator"
+              target="_blank"
+              rel="noreferrer"
+            >
               freeCodeCamp test suite
             </a>
             .
@@ -113,6 +118,18 @@ function App() {
             dedicated plus-minus button. However, this approach will cause test
             No. 13 failed. So, I add a patch for it.
           </small>
+        </p>
+      </div>
+      <div className="social">
+        <SocialLinks></SocialLinks>
+      </div>
+      <div className="footer">
+        <p>
+          Crafted with ❤️ in Indonesia by{' '}
+          <a href="https://onpilot.github.io" target="_blank" rel="noreferrer">
+            Idan
+          </a>
+          .
         </p>
       </div>
     </>
